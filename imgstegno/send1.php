@@ -1,0 +1,105 @@
+<?php
+      include "db.php";
+      include "header1.php";
+     
+     
+
+            if(isset($_POST['send']))
+            {
+                        
+						
+					
+
+						$email =$_POST['email'];
+						$htext = $_POST['htext'];
+
+                       // echo $htext;
+                        $ciphering = "AES-128-CTR"; 
+						$iv_length = openssl_cipher_iv_length($ciphering); 
+						$options = 0; 
+						$encryption_iv = '1234567891011121'; 
+						$encryption_key = "hiddentext@456"; 
+					
+					
+					
+					
+					$etext =openssl_encrypt($_POST['htext'], $ciphering,$encryption_key, $options, $encryption_iv);
+            }
+            else
+            {
+                echo '<script type="text/javascript">
+                                            alert("Enter the hideent text ");
+                                            location="send.php";
+                                    </script>';
+            }
+            
+
+
+?>
+
+    <div class="container">
+        <br>
+        <br>
+
+							<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4>HIDDEN  <span>TEXT</span></h4>
+										
+                                            <form  action="encode.php" method="post" name="sentMessage" id="contactForm" enctype="multipart/form-data">
+														<div class="control-group form-group">
+															
+																<label class="contact-p1">HIDDEN TEXT:</label>
+																<input type="text" class="form-control" name="htext" id="name" value="<?php echo $htext;?>" readonly >
+																<p class="help-block"></p>
+														   
+														</div>	
+
+                                                        <div class="control-group form-group">
+															
+																<label class="contact-p1">ENCRYPTED TEXT:</label>
+																<input type="text" class="form-control" name="etext" id="name" value="<?php echo $etext;?>" readonly >
+																<p class="help-block"></p>
+														   
+														</div>	
+														
+														
+														<div class="control-group form-group">
+															
+																<label class="contact-p1">Reciver Email:</label>
+																<input type="email" class="form-control" name="email" id="name" value="<?php echo $email ;?>" readonly >
+																<p class="help-block"></p>
+														   
+														</div>	
+
+                                                        
+                                                        <div class="input" style="background:white;">
+                                                            <center>
+                                                                    <p><input type="file"  name="file" accept="image/*"  id="file"  onchange="loadFile(event)" style="display: none;" required>
+                                                                        
+                                                                        <label for="file" style="cursor: pointer;"><img id="output" src="images/Photosymbol.png" width="100%" style="border-radius:1.5em" />
+                                                                        </label></p>									
+                                                
+                                                            </center>   
+                                                        </div>
+														
+																		
+                                                         <!--
+                                                         <div class="control-group form-group">
+															
+																<label class="contact-p1">Select image:</label>
+																<input type="file" id="myfile" name="myfile" required>
+																<p class="help-block"></p>
+														   
+														</div>	-->
+														
+														<input type="submit" name="send" value="Send  Image" class="btn btn-primary">	
+											</form>
+                                                              
+                                    </div>
+								</div>
+</div>
+							
+<!-- //Modal1 -->
+

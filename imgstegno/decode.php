@@ -1,0 +1,119 @@
+<?php
+
+ include "db.php";
+ include "header1.php";
+ 
+function desteganize($file) {
+    // Read the file into memory.
+    $img = imagecreatefrompng($file);
+  
+    // Read the message dimensions.
+    $width = imagesx($img);
+    $height = imagesy($img);
+  
+    // Set the message.
+    $binaryMessage = '';
+  
+    // Initialise message buffer.
+    $binaryMessageCharacterParts = [];
+  
+    for ($y = 0; $y < $height; $y++) {
+      for ($x = 0; $x < $width; $x++) {
+  
+        // Extract the colour.
+        $rgb = imagecolorat($img, $x, $y);
+        $colors = imagecolorsforindex($img, $rgb);
+  
+        $blue = $colors['blue'];
+  
+        // Convert the blue to binary.
+        $binaryBlue = decbin($blue);
+  
+        // Extract the least significant bit into out message buffer..
+        $binaryMessageCharacterParts[] = $binaryBlue[strlen($binaryBlue) - 1];
+  
+        if (count($binaryMessageCharacterParts) == 8) {
+          // If we have 8 parts to the message buffer we can update the message string.
+          $binaryCharacter = implode('', $binaryMessageCharacterParts);
+          $binaryMessageCharacterParts = [];
+          if ($binaryCharacter == '00000011') {
+            // If the 'end of text' character is found then stop looking for the message.
+            break 2;
+          }
+          else {
+            // Append the character we found into the message.
+            $binaryMessage .= $binaryCharacter;
+          }
+        }
+      }
+    }
+  
+    // Convert the binary message we have found into text.
+    $message = '';
+    for ($i = 0; $i < strlen($binaryMessage); $i += 8) {
+      $character = mb_substr($binaryMessage, $i, 8);
+      $message .= chr(bindec($character));
+    }
+  
+    return $message;
+  }
+
+$file=$_SESSION['file'];
+$secretfile = 'encode/'.$file;
+$message = desteganize($secretfile);
+
+						$ciphering = "AES-128-CTR"; 
+						$iv_length = openssl_cipher_iv_length($ciphering); 
+						$options = 0; 
+						$encryption_iv = '1234567891011121'; 
+						$encryption_key = "hiddentext@456"; 
+					
+					
+					
+					$dtext =openssl_decrypt($message, $ciphering,$encryption_key, $options, $encryption_iv);
+//echo $message;
+?>
+
+ <div class="container">
+        <br>
+        <br>
+
+							<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										
+										<h4>VIEW   <span>MESSAGES</span></h4>
+													<div class="control-group form-group">
+															
+																<label class="contact-p1">IMAGE:</label>
+																<img  src="<?php echo $secretfile ;?>"/>
+																<p class="help-block"></p>
+														   
+														</div>	
+                                            
+														<div class="control-group form-group">
+															
+																<label class="contact-p1">ENCRYPTED TEXT:</label>
+																<input type="text" class="form-control" value="<?php echo $message ;?>"  readonly >
+																<p class="help-block"></p>
+														   
+														</div>	
+														
+														<div class="control-group form-group">
+															
+																<label class="contact-p1">MESSAGE:</label>
+																<input type="text" class="form-control"  value="<?php echo $dtext ;?>"  readonly >
+																<p class="help-block"></p>
+														   
+														</div>	
+														
+																		
+														
+														
+													
+
+                                                              
+                                    </div>
+								</div>
+</div>
+							

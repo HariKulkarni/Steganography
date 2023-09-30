@@ -1,0 +1,100 @@
+<?php
+      include "db.php";
+      include "header1.php";
+     
+
+
+
+?>
+
+    
+											
+											
+											
+											<?php
+											
+													$email=$_SESSION['email'];
+													
+													
+													
+													$id =$_POST['id'];
+													$sql = "select * from msg where id='$id'";
+													$result=mysqli_query($conn, $sql);
+													$rowcount=mysqli_num_rows($result);
+													$arr=mysqli_fetch_array($result);
+													$verificationcode=$arr['verificationcode'];
+														
+													//echo 	$verificationcode;
+													
+													
+													require 'PHPMailer-master/PHPMailerAutoload.php';
+
+												$mail = new PHPMailer();
+											  
+											  //Enable SMTP debugging.
+											  $mail->SMTPDebug = 3;
+											  //Set PHPMailer to use SMTP.
+											  $mail->isSMTP();
+											  //Set SMTP host name
+											  $mail->Host = "smtp.gmail.com";
+											  $mail->SMTPOptions = array(
+																'ssl' => array(
+																	'verify_peer' => false,
+																	'verify_peer_name' => false,
+																	'allow_self_signed' => true
+																)
+															);
+											  //Set this to true if SMTP host requires authentication to send email 
+											  $mail->SMTPAuth = TRUE;
+											  //Provide username and password
+											  $mail->Username = "ashishrevankar333@gmail.com";//enter gmail id here
+											  $mail->Password = "qioiyltxzjqvarcx";//enter gmail password here
+											  //If SMTP requires TLS encryption then set it
+											  $mail->SMTPSecure = "false";
+											  $mail->Port = 587;
+											  //Set TCP port to connect to
+											  
+											  $mail->From = "datahiding@gmail.com";
+											  $mail->FromName = "DATA HIDING";
+
+											  $address = $email;
+											  $mail->addAddress($address);
+											  $mail->isHTML(true);
+											// $mail->addAttachment('sonu.txt'); //set new name
+											//$mail->addAttachment('kunal.txt'); //set new name
+												$mail->Subject    = " Verification";
+
+											 $mail->Body ="
+											 
+												Thanks for signing up!
+												  Enter bleow Verification Code  you have Extract  your Hidden Data.
+												 
+												<br/>------------------------<br/>
+												
+												<h1>Verification Code: $verificationcode </h1> <br/>									
+												------------------------
+												";
+			 
+
+											 
+
+											  $mail->AltBody = "This is the plain text version of the email content";
+											  if(!$mail->send())
+											  {
+											  // echo "Mailer Error: " . $mail->ErrorInfo;
+											  }
+											  else
+											  {
+													echo '<script type="text/javascript">
+													alert("Verification Email sent on given Mail ID successfully please check Your email Id and Verifiy OTP");
+													location="check2.php";
+													</script>';
+											  }
+											 
+															  
+													
+						
+											
+											?>
+                                           
+                                       

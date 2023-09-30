@@ -1,0 +1,86 @@
+<?php
+      include "db.php";
+      include "header1.php";
+     
+
+
+
+?>
+
+    <div class="container">
+        <br>
+        <br>
+
+							<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h4>VIEW   <span>MESSAGES</span></h4>
+										<center>
+											<table border>
+											
+													<tr>
+															<th>SENDER NAME</th>
+															<th>SENDER EMAIL </th>
+															<th>MESSAGE</th>
+															<th>READ</th>
+													
+														
+													
+													</tr>
+											
+											
+											
+											
+											
+											<?php
+											
+													$email=$_SESSION['email'];
+													
+													
+													
+													
+													$sql = "select * from msg where email='$email'";
+													$result=mysqli_query($conn, $sql);
+													$rowcount=mysqli_num_rows($result);
+													while($arr=mysqli_fetch_array($result))
+													{
+														$sname=$arr['sname'];
+														$semail=$arr['semail'];														
+														$file=$arr['file'];
+														$id=$arr['id'];
+														echo '
+																<td> '.$sname.' </td>
+																<td> '.$semail.' </td>
+																<td><img src="encode/'.$file.'" width=200 height=200 /> </td>
+																<td>
+																	<form  action="check1.php" method="post" name="sentMessage" id="contactForm" >
+															
+																		<input type="hidden" name="sname" value="'.$sname.'" />
+																		
+																		
+																		<input type="submit" name="check" value="Extract hidden Text" class="btn btn-primary">	
+																	</form>	
+																  
+																</td>
+															  
+															  
+															  
+															  
+															  ';
+															  
+													}
+						
+											
+											?>
+                                           
+                                                   
+										</table>
+									</center>
+																				
+                                    </div>
+								</div>
+</div>
+							
+<!-- //Modal1 -->
+
